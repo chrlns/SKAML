@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:skaml="http://skaml.org/SKAML" targetNamespace="http://skaml.org/SKAML">
+
+    <element name="body">
+        <complexType>
+            <sequence>
+                <element ref="skaml:skeleton"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="skeleton">
+        <complexType>
+            <all>
+                <element ref="skaml:bones"/>
+                <element ref="skaml:joints"/>
+                <element ref="skaml:aspects"/>
+            </all>
+            <attribute name="length" type="decimal"/>
+        </complexType>
+    </element>
+
+    <element name="bones">
+        <complexType>
+            <sequence>
+                <element ref="skaml:bone" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="bone">
+        <complexType>
+            <sequence>
+                <element ref="skaml:sensor" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="skaml:assessment" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+            <attribute name="id" type="string"/>
+            <attribute name="from" type="string"/>
+            <attribute name="to" type="string"/>
+            <attribute name="length" type="decimal"/>
+            <attribute name="orientation" type="string"/>
+        </complexType>
+    </element>
+
+    <element name="bone-ref">
+        <complexType>
+            <attribute name="to" type="string"/>
+        </complexType>
+    </element>
+
+    <element name="sensor">
+        <complexType>
+			<attribute name="id" type="string"/>
+            <attribute name="type" type="string"/>
+            <attribute name="transformation" type="string"/>
+        </complexType>
+    </element>
+
+    <element name="assessment">
+        <complexType>
+            <attribute name="type" type="string"/>
+            <attribute name="joint" type="string"/>
+            <attribute name="bone" type="string"/>
+        </complexType>
+    </element>
+
+    <element name="joints">
+        <complexType>
+            <sequence>
+                <element ref="skaml:joint" minOccurs="1" maxOccurs="1"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="joint">
+        <complexType mixed="true">
+            <sequence>
+				<element ref="skaml:sensor" minOccurs="0" maxOccurs="1"/>
+                <element ref="skaml:assessment" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="skaml:joint" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+            <attribute name="id" type="string"/>
+            <attribute name="root" type="boolean"/>
+        </complexType>
+    </element>
+
+    <element name="aspects">
+        <complexType>
+            <sequence>
+                <element ref="skaml:aspect" minOccurs="0"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="aspect">
+        <complexType>
+            <sequence>
+                <element ref="skaml:features"/>
+            </sequence>
+            <attribute name="id" type="string"/>
+        </complexType>
+    </element>
+
+    <element name="features">
+        <complexType>
+            <sequence>
+                <element ref="skaml:feature"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="feature">
+        <complexType>
+            <sequence>
+                <!-- A primitive representation of this feature -->
+                <element ref="skaml:primitive" minOccurs="1" maxOccurs="1"/>
+
+                <!-- A complex representation of this feature, e.g. with x3d -->
+                <element name="shape" type="string" minOccurs="0" maxOccurs="1"/>
+
+                <!-- Reference to at least one bone -->
+                <element ref="skaml:bone-ref" minOccurs="1" maxOccurs="unbounded"/>
+            </sequence>
+            <attribute name="id" type="string"/>
+        </complexType>
+    </element>
+
+    <element name="primitive">
+        <complexType>
+            <attribute name="type" type="skaml:primitiveTypes" use="required"/>
+        </complexType>
+    </element>
+
+    <simpleType name="primitiveTypes">
+        <restriction base="string">
+            <enumeration value="cube"/>
+            <enumeration value="sphere"/>
+            <enumeration value="line"/>
+        </restriction>
+    </simpleType>
+
+</schema>
